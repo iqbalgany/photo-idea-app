@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:photo_idea_app/core/di.dart';
+import 'package:photo_idea_app/presentation/pages/dashboard_page.dart';
+import 'package:photo_idea_app/presentation/pages/search_photo_page.dart';
 
 void main() {
+  initInjection();
   runApp(const MainApp());
 }
 
@@ -10,14 +15,17 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData.dark(
-        useMaterial3: true,
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        textTheme: GoogleFonts.poppinsTextTheme(),
       ),
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
-      ),
+      routes: {
+        '/': (context) => DashboardPage(),
+        SearchPhotoPage.routeName: (context) {
+          final query = ModalRoute.of(context)?.settings.arguments as String;
+          return SearchPhotoPage(query: query);
+        }
+      },
     );
   }
 }
