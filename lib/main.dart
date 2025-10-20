@@ -4,6 +4,8 @@ import 'package:photo_idea_app/core/di.dart';
 import 'package:photo_idea_app/presentation/pages/dashboard_page.dart';
 import 'package:photo_idea_app/presentation/pages/search_photo_page.dart';
 
+import 'presentation/pages/detail_photo_page.dart';
+
 void main() {
   initInjection();
   runApp(const MainApp());
@@ -24,7 +26,11 @@ class MainApp extends StatelessWidget {
         SearchPhotoPage.routeName: (context) {
           final query = ModalRoute.of(context)?.settings.arguments as String;
           return SearchPhotoPage(query: query);
-        }
+        },
+        DetailPhotoPage.routeName: (context) {
+          final id = ModalRoute.of(context)?.settings.arguments as int;
+          return DetailPhotoPage(id: id);
+        },
       },
     );
   }

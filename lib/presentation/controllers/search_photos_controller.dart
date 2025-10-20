@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:photo_idea_app/common/enums.dart';
 import 'package:photo_idea_app/data/datasources/remote_photo_data_source.dart';
-import 'package:photo_idea_app/data/models/photo_mode.dart';
+import 'package:photo_idea_app/data/models/photo_model.dart';
 
 class SearchPhotosController extends GetxController {
   final _state = SearchPhotosState().obs;

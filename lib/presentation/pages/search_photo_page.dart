@@ -4,15 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:photo_idea_app/presentation/controllers/search_photos_controller.dart';
+import 'package:photo_idea_app/presentation/pages/detail_photo_page.dart';
 
 import '../../common/enums.dart';
-import '../../data/models/photo_mode.dart';
+import '../../data/models/photo_model.dart';
 
 class SearchPhotoPage extends StatefulWidget {
   const SearchPhotoPage({super.key, required this.query});
   final String query;
 
-  static const routeName = '/search';
+  static const routeName = '/photo/search';
 
   @override
   State<SearchPhotoPage> createState() => _SearchPhotoPageState();
@@ -35,6 +36,14 @@ class _SearchPhotoPageState extends State<SearchPhotoPage> {
       0,
       duration: Duration(milliseconds: 500),
       curve: Curves.fastOutSlowIn,
+    );
+  }
+
+  void gotoDetail(PhotoModel photo) {
+    Navigator.pushNamed(
+      context,
+      DetailPhotoPage.routeName,
+      arguments: photo.id,
     );
   }
 
@@ -141,9 +150,12 @@ class _SearchPhotoPageState extends State<SearchPhotoPage> {
   }
 
   Widget buildPhotoItem(PhotoModel photo) {
-    return ExtendedImage.network(
-      photo.source?.medium ?? '',
-      fit: BoxFit.cover,
+    return GestureDetector(
+      onTap: () => gotoDetail(photo),
+      child: ExtendedImage.network(
+        photo.source?.medium ?? '',
+        fit: BoxFit.cover,
+      ),
     );
   }
 

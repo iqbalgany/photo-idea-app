@@ -36,9 +36,7 @@ class PhotoModel {
         photographerUrl: json["photographer_url"],
         photographerId: json["photographer_id"],
         avgColor: json["avg_color"],
-        source: json["source"] == null
-            ? null
-            : SourceModel.fromJson(json["source"]),
+        source: json["src"] == null ? null : SourceModel.fromJson(json["src"]),
         liked: json["liked"],
         alt: json["alt"],
       );
@@ -52,7 +50,7 @@ class PhotoModel {
         "photographer_url": photographerUrl,
         "photographer_id": photographerId,
         "avg_color": avgColor,
-        "source": source?.toJson(),
+        "src": source?.toJson(),
         "liked": liked,
         "alt": alt,
       };

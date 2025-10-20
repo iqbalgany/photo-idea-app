@@ -5,8 +5,9 @@ import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:photo_idea_app/common/app_constants.dart';
 import 'package:photo_idea_app/common/enums.dart';
-import 'package:photo_idea_app/data/models/photo_mode.dart';
+import 'package:photo_idea_app/data/models/photo_model.dart';
 import 'package:photo_idea_app/presentation/controllers/curated_photos_controller.dart';
+import 'package:photo_idea_app/presentation/pages/detail_photo_page.dart';
 import 'package:photo_idea_app/presentation/pages/search_photo_page.dart';
 
 class HomeFragment extends StatefulWidget {
@@ -43,6 +44,14 @@ class _HomeFragmentState extends State<HomeFragment> {
       context,
       SearchPhotoPage.routeName,
       arguments: query,
+    );
+  }
+
+  void gotoDetail(PhotoModel photo) {
+    Navigator.pushNamed(
+      context,
+      DetailPhotoPage.routeName,
+      arguments: photo.id,
     );
   }
 
@@ -241,9 +250,12 @@ class _HomeFragmentState extends State<HomeFragment> {
   }
 
   Widget buildPhotoItem(PhotoModel photo) {
-    return ExtendedImage.network(
-      photo.source?.medium ?? '',
-      fit: BoxFit.cover,
+    return GestureDetector(
+      onTap: () => gotoDetail(photo),
+      child: ExtendedImage.network(
+        photo.source?.medium ?? '',
+        fit: BoxFit.cover,
+      ),
     );
   }
 

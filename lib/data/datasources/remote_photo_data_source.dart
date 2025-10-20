@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:photo_idea_app/core/api_keys.dart';
 import 'package:photo_idea_app/core/apis.dart';
 import 'package:photo_idea_app/core/di.dart';
-import 'package:photo_idea_app/data/models/photo_mode.dart';
+import 'package:photo_idea_app/data/models/photo_model.dart';
 
 class RemotePhotoDataSource {
   static Future<(bool, String, List<PhotoModel>?)> fetchCurated(
