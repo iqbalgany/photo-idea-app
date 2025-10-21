@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:photo_idea_app/presentation/controllers/detail_photo_controller.dart';
 
 class DetailPhotoPage extends StatefulWidget {
   const DetailPhotoPage({super.key, required this.id});
@@ -11,6 +13,24 @@ class DetailPhotoPage extends StatefulWidget {
 }
 
 class _DetailPhotoPageState extends State<DetailPhotoPage> {
+  final detailPhotoController = Get.put(DetailPhotoController());
+
+  void fetchDetail() {
+    detailPhotoController.fetch(widget.id);
+  }
+
+  @override
+  void initState() {
+    fetchDetail();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    DetailPhotoController.delete();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold();
