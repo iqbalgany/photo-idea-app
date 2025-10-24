@@ -69,7 +69,7 @@ class _DetailPhotoPageState extends State<DetailPhotoPage> {
                         children: [
                           buildBackButton(),
                           Spacer(),
-                          buildPreview(),
+                          buildPreview(photo.source?.original ?? ''),
                           buildSaveButton(),
                         ],
                       ),
@@ -84,6 +84,7 @@ class _DetailPhotoPageState extends State<DetailPhotoPage> {
               ),
               Gap(20),
               buildDescription(photo.alt ?? ''),
+              buildPhotographer(photo.photographer ?? '', photo.url ?? ''),
             ],
           );
         },
@@ -107,9 +108,29 @@ class _DetailPhotoPageState extends State<DetailPhotoPage> {
     );
   }
 
-  Widget buildPreview() {
+  Widget buildPreview(String imageURL) {
     return IconButton(
-      onPressed: () {},
+      onPressed: () {
+        showDialog(
+          context: context,
+          builder: (context) => Stack(
+            children: [
+              Positioned.fill(
+                  child: InteractiveViewer(
+                      child: ExtendedImage.network(imageURL))),
+              Align(
+                alignment: Alignment.topCenter,
+                child: CloseButton(
+                  color: Colors.white,
+                  style: ButtonStyle(
+                    backgroundColor: WidgetStatePropertyAll(Colors.black38),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
       color: Colors.white,
       style: ButtonStyle(
         backgroundColor: WidgetStatePropertyAll(Colors.black38),
@@ -165,6 +186,31 @@ class _DetailPhotoPageState extends State<DetailPhotoPage> {
   }
 
   Widget buildPhotographer(String name, String url) {
-    return ListTile();
+    return ListTile(
+      leading: Icon(
+        Icons.account_circle,
+        size: 48,
+        color: Colors.grey,
+      ),
+      horizontalTitleGap: 10,
+      title: Text(
+        name,
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      subtitle: GestureDetector(
+        onTap: () => openURL(url),
+        child: Text(
+          'See Profile on Pexels',
+          style: TextStyle(
+            fontWeight: FontWeight.w400,
+            color: Colors.black38,
+            decoration: TextDecoration.underline,
+            decorationThickness: 0.5,
+          ),
+        ),
+      ),
+    );
   }
 }
