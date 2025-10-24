@@ -1,5 +1,6 @@
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:photo_idea_app/common/enums.dart';
 import 'package:photo_idea_app/presentation/controllers/detail_photo_controller.dart';
@@ -16,6 +17,8 @@ class DetailPhotoPage extends StatefulWidget {
 
 class _DetailPhotoPageState extends State<DetailPhotoPage> {
   final detailPhotoController = Get.put(DetailPhotoController());
+
+  void openURL(String url) {}
 
   void fetchDetail() {
     detailPhotoController.fetch(widget.id);
@@ -70,10 +73,17 @@ class _DetailPhotoPageState extends State<DetailPhotoPage> {
                           buildSaveButton(),
                         ],
                       ),
-                    )
+                    ),
+                    Positioned(
+                      left: 16,
+                      bottom: 16,
+                      child: buildOpenOnPexels(photo.url ?? ''),
+                    ),
                   ],
                 ),
               ),
+              Gap(20),
+              buildDescription(photo.alt ?? ''),
             ],
           );
         },
@@ -98,15 +108,63 @@ class _DetailPhotoPageState extends State<DetailPhotoPage> {
   }
 
   Widget buildPreview() {
-    return IconButton(onPressed: () {}, icon: Icon(Icons.visibility));
-  }
-
-  Widget buildSaveButton() {
-    return BackButton(
+    return IconButton(
+      onPressed: () {},
       color: Colors.white,
       style: ButtonStyle(
         backgroundColor: WidgetStatePropertyAll(Colors.black38),
       ),
+      icon: Icon(Icons.visibility),
     );
+  }
+
+  Widget buildSaveButton() {
+    return IconButton(
+      onPressed: () {},
+      color: Colors.white,
+      style: ButtonStyle(
+        backgroundColor: WidgetStatePropertyAll(Colors.black38),
+      ),
+      icon: Icon(Icons.bookmark_border),
+    );
+  }
+
+  Widget buildOpenOnPexels(String url) {
+    return GestureDetector(
+      onTap: () => openURL(url),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(0),
+          color: Colors.black38,
+        ),
+        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        child: Text(
+          'Open on Pexels',
+          style: TextStyle(
+            fontWeight: FontWeight.w400,
+            fontSize: 14,
+            color: Colors.white,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildDescription(String description) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Text(
+        description == '' ? 'no description' : description,
+        style: TextStyle(
+          fontWeight: FontWeight.w400,
+          fontSize: 14,
+          color: Colors.black45,
+        ),
+      ),
+    );
+  }
+
+  Widget buildPhotographer(String name, String url) {
+    return ListTile();
   }
 }
