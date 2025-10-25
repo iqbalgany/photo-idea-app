@@ -1,9 +1,11 @@
+import 'package:d_info/d_info.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:photo_idea_app/common/enums.dart';
 import 'package:photo_idea_app/presentation/controllers/detail_photo_controller.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DetailPhotoPage extends StatefulWidget {
   const DetailPhotoPage({super.key, required this.id});
@@ -18,7 +20,11 @@ class DetailPhotoPage extends StatefulWidget {
 class _DetailPhotoPageState extends State<DetailPhotoPage> {
   final detailPhotoController = Get.put(DetailPhotoController());
 
-  void openURL(String url) {}
+  void openURL(String url) async {
+    if (!await launchUrl(Uri.parse(url))) {
+      DInfo.toastError('Could not launch URL');
+    }
+  }
 
   void fetchDetail() {
     detailPhotoController.fetch(widget.id);
@@ -84,7 +90,8 @@ class _DetailPhotoPageState extends State<DetailPhotoPage> {
               ),
               Gap(20),
               buildDescription(photo.alt ?? ''),
-              buildPhotographer(photo.photographer ?? '', photo.url ?? ''),
+              buildPhotographer(
+                  photo.photographer ?? '', photo.photographerUrl ?? ''),
             ],
           );
         },
