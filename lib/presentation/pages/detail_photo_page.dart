@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:photo_idea_app/common/enums.dart';
+import 'package:photo_idea_app/data/models/photo_model.dart';
 import 'package:photo_idea_app/presentation/controllers/detail_photo_controller.dart';
 import 'package:photo_idea_app/presentation/controllers/recommendation_photo_controller.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -103,7 +104,12 @@ class _DetailPhotoPageState extends State<DetailPhotoPage> {
               Gap(20),
               buildDescription(photo.alt ?? ''),
               buildPhotographer(
-                  photo.photographer ?? '', photo.photographerUrl ?? ''),
+                photo.photographer ?? '',
+                photo.photographerUrl ?? '',
+              ),
+              Gap(20),
+              buildRecommendation(),
+              Gap(20),
             ],
           );
         },
@@ -228,6 +234,69 @@ class _DetailPhotoPageState extends State<DetailPhotoPage> {
             decoration: TextDecoration.underline,
             decorationThickness: 0.5,
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildRecommendation() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Text(
+            'More like this',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+            ),
+          ),
+        ),
+        Gap(12),
+        Obx(
+          () {
+            final state = recommendationPhotoController.state;
+            if (state.fetchStatus == FetchStatus.init) {
+              return SizedBox();
+            }
+            if (state.fetchStatus == FetchStatus.loading) {
+              return Center(child: CircularProgressIndicator());
+            }
+            if (state.fetchStatus == FetchStatus.failed) {
+              return Center(child: Text('No Recommendation'));
+            }
+            final list = state.list;
+            return SizedBox(
+              height: 150,
+              child: ListView.builder(
+                itemCount: list.length,
+                scrollDirection: Axis.horizontal,
+                physics: const BouncingScrollPhysics(),
+                padding: EdgeInsets.only(right: 16),
+                itemBuilder: (context, index) {
+                  final photo = list[index];
+                  return Padding(
+                    padding: EdgeInsets.only(left: index == 0 ? 16 : 8),
+                    child: buildRecommendationItem(photo),
+                  );
+                },
+              ),
+            );
+          },
+        )
+      ],
+    );
+  }
+
+  Widget buildRecommendationItem(PhotoModel photo) {
+    return AspectRatio(
+      aspectRatio: 3 / 4,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(8),
+        child: ExtendedImage.network(
+          photo.source?.medium ?? "",
+          fit: BoxFit.cover,
         ),
       ),
     );
