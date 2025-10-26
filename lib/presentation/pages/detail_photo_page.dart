@@ -5,6 +5,7 @@ import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:photo_idea_app/common/enums.dart';
 import 'package:photo_idea_app/presentation/controllers/detail_photo_controller.dart';
+import 'package:photo_idea_app/presentation/controllers/recommendation_photo_controller.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DetailPhotoPage extends StatefulWidget {
@@ -19,6 +20,8 @@ class DetailPhotoPage extends StatefulWidget {
 
 class _DetailPhotoPageState extends State<DetailPhotoPage> {
   final detailPhotoController = Get.put(DetailPhotoController());
+  final recommendationPhotoController =
+      Get.put(RecommendationPhotosController());
 
   void openURL(String url) async {
     if (!await launchUrl(Uri.parse(url))) {
@@ -27,7 +30,15 @@ class _DetailPhotoPageState extends State<DetailPhotoPage> {
   }
 
   void fetchDetail() {
-    detailPhotoController.fetch(widget.id);
+    detailPhotoController.fetch(widget.id).then((photo) {
+      if (photo == null) return;
+
+      fetchRecommendation(photo.alt ?? '');
+    });
+  }
+
+  void fetchRecommendation(String query) {
+    recommendationPhotoController.fetchRequest(query);
   }
 
   @override
@@ -38,6 +49,7 @@ class _DetailPhotoPageState extends State<DetailPhotoPage> {
 
   @override
   void dispose() {
+    RecommendationPhotosController.delete();
     DetailPhotoController.delete();
     super.dispose();
   }
