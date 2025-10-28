@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:photo_idea_app/common/enums.dart';
 import 'package:photo_idea_app/data/models/photo_model.dart';
 import 'package:photo_idea_app/presentation/controllers/detail_photo_controller.dart';
+import 'package:photo_idea_app/presentation/controllers/is_saved_controller.dart';
 import 'package:photo_idea_app/presentation/controllers/recommendation_photo_controller.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -21,6 +22,7 @@ class DetailPhotoPage extends StatefulWidget {
 
 class _DetailPhotoPageState extends State<DetailPhotoPage> {
   final detailPhotoController = Get.put(DetailPhotoController());
+  final isSavedController = Get.put(IsSavedController());
   final recommendationPhotoController =
       Get.put(RecommendationPhotosController());
 
@@ -42,9 +44,14 @@ class _DetailPhotoPageState extends State<DetailPhotoPage> {
     recommendationPhotoController.fetchRequest(query);
   }
 
+  void checkIsSaved() {
+    isSavedController.executeRequest(widget.id);
+  }
+
   @override
   void initState() {
     fetchDetail();
+    checkIsSaved();
     super.initState();
   }
 
@@ -52,6 +59,7 @@ class _DetailPhotoPageState extends State<DetailPhotoPage> {
   void dispose() {
     RecommendationPhotosController.delete();
     DetailPhotoController.delete();
+    IsSavedController.delete();
     super.dispose();
   }
 
@@ -165,14 +173,23 @@ class _DetailPhotoPageState extends State<DetailPhotoPage> {
   }
 
   Widget buildSaveButton() {
-    return IconButton(
-      onPressed: () {},
-      color: Colors.white,
-      style: ButtonStyle(
-        backgroundColor: WidgetStatePropertyAll(Colors.black38),
-      ),
-      icon: Icon(Icons.bookmark_border),
-    );
+    return Obx(() {
+      final isSaved = isSavedController.state.status;
+      return IconButton(
+        onPressed: () {
+          if (isSaved) {
+            // remove
+          } else {
+            // insert
+          }
+        },
+        color: Colors.white,
+        style: ButtonStyle(
+          backgroundColor: WidgetStatePropertyAll(Colors.black38),
+        ),
+        icon: Icon(isSaved ? Icons.bookmark : Icons.bookmark_border),
+      );
+    });
   }
 
   Widget buildOpenOnPexels(String url) {
