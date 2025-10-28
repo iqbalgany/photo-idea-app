@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:photo_idea_app/data/models/source_model.dart';
 
 class PhotoModel {
@@ -53,5 +55,19 @@ class PhotoModel {
         "src": source?.toJson(),
         "liked": liked,
         "alt": alt,
+      };
+
+  factory PhotoModel.fromJsonSaved(Map<String, dynamic> json) => PhotoModel(
+        id: json["id"],
+        source: json["src"] == null
+            ? null
+            : SourceModel.fromJson(
+                jsonDecode(json["src"]),
+              ),
+      );
+
+  Map<String, dynamic> toJsonSaved() => {
+        "id": id,
+        "src": jsonEncode(source?.toJson()),
       };
 }
