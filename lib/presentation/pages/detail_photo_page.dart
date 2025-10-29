@@ -8,6 +8,7 @@ import 'package:photo_idea_app/data/models/photo_model.dart';
 import 'package:photo_idea_app/presentation/controllers/detail_photo_controller.dart';
 import 'package:photo_idea_app/presentation/controllers/is_saved_controller.dart';
 import 'package:photo_idea_app/presentation/controllers/recommendation_photo_controller.dart';
+import 'package:photo_idea_app/presentation/controllers/save_photo_controller.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DetailPhotoPage extends StatefulWidget {
@@ -23,6 +24,7 @@ class DetailPhotoPage extends StatefulWidget {
 class _DetailPhotoPageState extends State<DetailPhotoPage> {
   final detailPhotoController = Get.put(DetailPhotoController());
   final isSavedController = Get.put(IsSavedController());
+  final savePhotoController = Get.put(SavePhotoController());
   final recommendationPhotoController =
       Get.put(RecommendationPhotosController());
 
@@ -48,6 +50,21 @@ class _DetailPhotoPageState extends State<DetailPhotoPage> {
     isSavedController.executeRequest(widget.id);
   }
 
+  void saveOrUnsave(bool isSaved, PhotoModel photo) async {
+    SavePhotoState state = isSaved
+        ? await savePhotoController.unsave(widget.id)
+        : await savePhotoController.save(photo);
+
+    if (state.fetchStatus == FetchStatus.failed) {
+      DInfo.toastError(state.message);
+    }
+
+    if (state.fetchStatus == FetchStatus.success) {
+      checkIsSaved();
+      DInfo.toastSuccess(state.message);
+    }
+  }
+
   @override
   void initState() {
     fetchDetail();
@@ -60,6 +77,7 @@ class _DetailPhotoPageState extends State<DetailPhotoPage> {
     RecommendationPhotosController.delete();
     DetailPhotoController.delete();
     IsSavedController.delete();
+    SavePhotoController.delete();
     super.dispose();
   }
 
@@ -97,7 +115,7 @@ class _DetailPhotoPageState extends State<DetailPhotoPage> {
                           buildBackButton(),
                           Spacer(),
                           buildPreview(photo.source?.original ?? ''),
-                          buildSaveButton(),
+                          buildSaveButton(photo),
                         ],
                       ),
                     ),
@@ -172,17 +190,11 @@ class _DetailPhotoPageState extends State<DetailPhotoPage> {
     );
   }
 
-  Widget buildSaveButton() {
+  Widget buildSaveButton(PhotoModel photo) {
     return Obx(() {
       final isSaved = isSavedController.state.status;
       return IconButton(
-        onPressed: () {
-          if (isSaved) {
-            // remove
-          } else {
-            // insert
-          }
-        },
+        onPressed: () => saveOrUnsave(isSaved, photo),
         color: Colors.white,
         style: ButtonStyle(
           backgroundColor: WidgetStatePropertyAll(Colors.black38),
