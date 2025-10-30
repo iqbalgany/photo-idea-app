@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:photo_idea_app/common/enums.dart';
 import 'package:photo_idea_app/data/models/photo_model.dart';
 import 'package:photo_idea_app/presentation/controllers/saved_controller.dart';
+import 'package:photo_idea_app/presentation/pages/detail_photo_page.dart';
 
 class SavedFragment extends StatefulWidget {
   const SavedFragment({super.key});
@@ -15,6 +16,14 @@ class SavedFragment extends StatefulWidget {
 
 class _SavedFragmentState extends State<SavedFragment> {
   final savedController = Get.put(SavedController());
+
+  void gotoDetail(PhotoModel photo) {
+    Navigator.pushNamed(
+      context,
+      DetailPhotoPage.routeName,
+      arguments: photo.id,
+    );
+  }
 
   @override
   void initState() {
@@ -82,7 +91,7 @@ class _SavedFragmentState extends State<SavedFragment> {
         }
         List<PhotoModel> list = state.list ?? [];
         if (list.isEmpty) {
-          return Center(child: Text('Empty'));
+          return Center(child: Text('No Saved Photo Yet'));
         }
         return GridView.builder(
           itemCount: list.length,
@@ -104,9 +113,12 @@ class _SavedFragmentState extends State<SavedFragment> {
   }
 
   Widget buildPhotoItem(PhotoModel photo) {
-    return ExtendedImage.network(
-      photo.source?.medium ?? '',
-      fit: BoxFit.cover,
+    return GestureDetector(
+      onTap: () => gotoDetail(photo),
+      child: ExtendedImage.network(
+        photo.source?.medium ?? '',
+        fit: BoxFit.cover,
+      ),
     );
   }
 }

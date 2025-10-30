@@ -9,6 +9,7 @@ import 'package:photo_idea_app/presentation/controllers/detail_photo_controller.
 import 'package:photo_idea_app/presentation/controllers/is_saved_controller.dart';
 import 'package:photo_idea_app/presentation/controllers/recommendation_photo_controller.dart';
 import 'package:photo_idea_app/presentation/controllers/save_photo_controller.dart';
+import 'package:photo_idea_app/presentation/controllers/saved_controller.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DetailPhotoPage extends StatefulWidget {
@@ -25,6 +26,7 @@ class _DetailPhotoPageState extends State<DetailPhotoPage> {
   final detailPhotoController = Get.put(DetailPhotoController());
   final isSavedController = Get.put(IsSavedController());
   final savePhotoController = Get.put(SavePhotoController());
+  final savedController = Get.find<SavedController>();
   final recommendationPhotoController =
       Get.put(RecommendationPhotosController());
 
@@ -60,6 +62,7 @@ class _DetailPhotoPageState extends State<DetailPhotoPage> {
     }
 
     if (state.fetchStatus == FetchStatus.success) {
+      savedController.fetchRequest();
       checkIsSaved();
       DInfo.toastSuccess(state.message);
     }
