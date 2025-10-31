@@ -7,6 +7,7 @@ environment:
   sdk: ^3.6.2
 
 dependencies:
+  blur: ^4.0.2
   d_info: ^0.2.0
   d_input: ^0.5.1
   extended_image: ^9.1.0
