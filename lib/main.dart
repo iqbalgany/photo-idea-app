@@ -1,5 +1,6 @@
 import 'package:d_session/d_session.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:photo_idea_app/core/di.dart';
 import 'package:photo_idea_app/presentation/pages/dashboard_page.dart';
@@ -8,10 +9,13 @@ import 'package:photo_idea_app/presentation/pages/search_photo_page.dart';
 
 import 'presentation/pages/detail_photo_page.dart';
 
-void main() async {
+void main() {
   initInjection();
-  WidgetsFlutterBinding.ensureInitialized();
-  await Future.delayed(Duration(milliseconds: 100));
+  final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  Future.delayed(Duration(milliseconds: 2500), () {
+    FlutterNativeSplash.remove();
+  });
   runApp(const MainApp());
 }
 
