@@ -9,13 +9,13 @@ import 'package:photo_idea_app/presentation/pages/search_photo_page.dart';
 
 import 'presentation/pages/detail_photo_page.dart';
 
-void main() {
-  initInjection();
+void main() async {
   final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-  Future.delayed(Duration(milliseconds: 2500), () {
+  Future.delayed(Duration(milliseconds: 2000), () {
     FlutterNativeSplash.remove();
   });
+  initInjection();
   runApp(const MainApp());
 }
 
