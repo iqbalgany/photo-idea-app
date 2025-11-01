@@ -1,13 +1,17 @@
+import 'package:d_session/d_session.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:photo_idea_app/core/di.dart';
+import 'package:photo_idea_app/presentation/pages/dashboard_page.dart';
 import 'package:photo_idea_app/presentation/pages/onboarding_page.dart';
 import 'package:photo_idea_app/presentation/pages/search_photo_page.dart';
 
 import 'presentation/pages/detail_photo_page.dart';
 
-void main() {
+void main() async {
   initInjection();
+  WidgetsFlutterBinding.ensureInitialized();
+  await Future.delayed(Duration(milliseconds: 100));
   runApp(const MainApp());
 }
 
@@ -22,8 +26,27 @@ class MainApp extends StatelessWidget {
         textTheme: GoogleFonts.poppinsTextTheme(),
       ),
       routes: {
-        // '/': (context) => DashboardPage(),
-        '/': (context) => OnboardingPage(),
+        '/': (context) => FutureBuilder(
+              future: DSession.getCustom('see_onboarding'),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Scaffold(
+                    body: Center(child: CircularProgressIndicator()),
+                  );
+                }
+
+                if (snapshot.hasError) {
+                  print('Error loading preference: ${snapshot.error}');
+                  return OnboardingPage();
+                }
+
+                if (snapshot.connectionState == ConnectionState.done) {
+                  if (snapshot.data == null) return OnboardingPage();
+                  return DashboardPage();
+                }
+                return SizedBox();
+              },
+            ),
         SearchPhotoPage.routeName: (context) {
           final query = ModalRoute.of(context)?.settings.arguments as String;
           return SearchPhotoPage(query: query);

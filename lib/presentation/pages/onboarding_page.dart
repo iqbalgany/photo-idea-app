@@ -1,12 +1,22 @@
 import 'package:blur/blur.dart';
+import 'package:d_session/d_session.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:photo_idea_app/common/app_constants.dart';
 
-class OnboardingPage extends StatelessWidget {
+class OnboardingPage extends StatefulWidget {
   const OnboardingPage({super.key});
 
-  void gotoDashboard() {}
+  @override
+  State<OnboardingPage> createState() => _OnboardingPageState();
+}
+
+class _OnboardingPageState extends State<OnboardingPage> {
+  void gotoDashboard() {
+    DSession.setCustom('see_onboarding', true).then((value) {
+      if (mounted) Navigator.pushReplacementNamed(context, '/');
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
